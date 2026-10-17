@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "feat/issue-204-add-pnpm-create-adapter-to-scaffold-a-custom",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "feat/issue-204-add-pnpm-create-adapter-to-scaffold-a-custom": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "feat/issue-204-add-pnpm-create-adapter-to-scaffold-a-custom",
+    "origin"
+  ]
+}
