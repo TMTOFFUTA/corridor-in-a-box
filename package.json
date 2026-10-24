@@ -23,6 +23,7 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:quarantine": "vitest run --mode quarantine",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
@@ -66,16 +67,17 @@
     "@stellar/stellar-sdk": "^17.2.1",
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
+    "@vitest/coverage-v8": "2.1.9",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "lefthook": "2.2.2",
+    "parse-prometheus-text-format": "^1.1.1",
     "pg": "^8.23.1",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.1",
-    "vitest": "^2.1.0",
-    "parse-prometheus-text-format": "^1.1.1"
+    "vitest": "^2.1.0"
   },
   "packageManager": "pnpm@9.12.0"
 }

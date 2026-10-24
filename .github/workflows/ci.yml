@@ -58,7 +58,15 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm test
+      # The suite, with coverage thresholds enforced (vitest.config.ts).
+      - run: pnpm test:coverage
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ always() }}
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+          retention-days: 14
+          if-no-files-found: ignore
       # web/ renders corridor data and the state list generated from the
       # manifests and the engine. Fail when the committed copy has drifted.
       - name: Check web/lib/generated is up to date

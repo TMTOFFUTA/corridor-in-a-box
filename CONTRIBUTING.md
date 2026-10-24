@@ -152,6 +152,26 @@ lists every quarantined test, its issue, and how it did in the job summary.
 `tests/quarantine.test.ts` fails if a `quarantine()` call has no issue URL.
 Once the issue is fixed, remove the wrapper.
 
+## Coverage
+
+`pnpm test:coverage` runs the suite under v8 coverage (`packages/*/src/**`) and fails
+when a threshold in `vitest.config.ts` is not met; CI's `build` job runs it and uploads
+`coverage/lcov.info`. The floors sit a little below what the suite measured on
+2026-10-24 (lines/statements 83.6%, branches 84.2%, functions 91.9%):
+
+| Scope                                            | Lines / statements | Branches | Functions |
+| ------------------------------------------------ | ------------------ | -------- | --------- |
+| Global                                           | 82                 | 83       | 90        |
+| `packages/engine/src/run.ts`                     | 90                 | 79       | 99        |
+| `packages/engine/src/verbs.ts`                   | 88                 | 85       | 91        |
+| `packages/engine/src/state.ts`, `idempotency.ts` | 99                 | 99       | 99        |
+| `packages/types/src/money.ts`                    | 99                 | 87       | 99        |
+
+Run on a subset of tests it will fail the global floor, which is expected: use it on the
+whole suite. If your change legitimately lowers a number (deleting covered code), say so
+in the PR and lower the floor in the same commit; never lower one to land untested code.
+Raise a floor when coverage rises for good. Spawned CLI processes are not measured.
+
 ## Releasing
 
 Maintainers only. Pushing a `vX.Y.Z` tag runs `.github/workflows/release-packages.yml`,

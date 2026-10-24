@@ -31,6 +31,53 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       include: ["tests/**/*.test.ts"],
+      // Only measured under `pnpm test:coverage` (--coverage); a plain `pnpm test` is unchanged.
+      coverage: {
+        provider: "v8",
+        include: ["packages/*/src/**"],
+        reporter: ["text-summary", "lcov"],
+        reportsDirectory: "coverage",
+        // Set a little below what the suite measures today (lines/statements 83.6,
+        // branches 84.2, functions 91.9), so a regression fails CI but noise does not.
+        // The money-moving files get their own, stricter floor. The numbers and how to
+        // change them are in CONTRIBUTING.md.
+        thresholds: {
+          lines: 82,
+          statements: 82,
+          branches: 83,
+          functions: 90,
+          "packages/engine/src/run.ts": {
+            lines: 90,
+            statements: 90,
+            branches: 79,
+            functions: 99,
+          },
+          "packages/engine/src/verbs.ts": {
+            lines: 88,
+            statements: 88,
+            branches: 85,
+            functions: 91,
+          },
+          "packages/engine/src/state.ts": {
+            lines: 99,
+            statements: 99,
+            branches: 99,
+            functions: 99,
+          },
+          "packages/engine/src/idempotency.ts": {
+            lines: 99,
+            statements: 99,
+            branches: 99,
+            functions: 99,
+          },
+          "packages/types/src/money.ts": {
+            lines: 99,
+            statements: 99,
+            branches: 87,
+            functions: 99,
+          },
+        },
+      },
       ...(quarantine && {
         env: { CORRIDOR_QUARANTINE: "1" },
         testNamePattern: /\[quarantine\]/,
