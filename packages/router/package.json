@@ -1,6 +1,24 @@
 {
   "name": "@corridor/router",
   "version": "0.1.0",
+  "description": "Resolve the best corridor route for a payment intent across anchors, quotes and fees.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezedike-evan/corridor-in-a-box.git",
+    "directory": "packages/router"
+  },
+  "bugs": {
+    "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
+  },
+  "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "router",
+    "routing",
+    "quote"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"

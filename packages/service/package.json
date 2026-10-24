@@ -1,6 +1,24 @@
 {
   "name": "@corridor/service",
   "version": "0.1.0",
+  "description": "HTTP service exposing the corridor engine: payment intents, status, callbacks, API keys and rate limiting.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezedike-evan/corridor-in-a-box.git",
+    "directory": "packages/service"
+  },
+  "bugs": {
+    "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
+  },
+  "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "http",
+    "service",
+    "api"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"

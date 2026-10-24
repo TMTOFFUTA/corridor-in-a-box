@@ -1,6 +1,24 @@
 {
   "name": "@corridor/stellar",
   "version": "0.1.0",
+  "description": "Stellar network wiring for the corridor engine: Horizon settlement, SEP-10 signing and the pre-settle gate.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezedike-evan/corridor-in-a-box.git",
+    "directory": "packages/stellar"
+  },
+  "bugs": {
+    "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
+  },
+  "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "stellar",
+    "horizon",
+    "settlement"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"

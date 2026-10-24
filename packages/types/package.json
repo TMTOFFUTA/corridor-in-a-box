@@ -1,6 +1,24 @@
 {
   "name": "@corridor/types",
   "version": "0.1.0",
+  "description": "Shared types for the corridor packages: money, Outcome, payment intents and the adapter port contracts.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezedike-evan/corridor-in-a-box.git",
+    "directory": "packages/types"
+  },
+  "bugs": {
+    "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
+  },
+  "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "types",
+    "money",
+    "outcome"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"

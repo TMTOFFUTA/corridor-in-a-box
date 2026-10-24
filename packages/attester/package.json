@@ -3,6 +3,22 @@
   "version": "0.1.0",
   "description": "Submit SEP conformance attestations to the on-chain corridor registry.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezedike-evan/corridor-in-a-box.git",
+    "directory": "packages/attester"
+  },
+  "bugs": {
+    "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
+  },
+  "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "attestation",
+    "registry",
+    "soroban"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"

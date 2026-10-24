@@ -12,6 +12,13 @@
     "url": "https://github.com/ezedike-evan/corridor-in-a-box/issues"
   },
   "homepage": "https://github.com/ezedike-evan/corridor-in-a-box#readme",
+  "keywords": [
+    "stellar",
+    "corridor",
+    "registry",
+    "attestation",
+    "soroban"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22"
