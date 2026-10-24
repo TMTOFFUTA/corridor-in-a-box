@@ -42,6 +42,7 @@
     "registry:history": "tsx examples/registry-history.ts",
     "attest": "tsx examples/attest.ts",
     "gen:web-data": "tsx scripts/gen-web-data.ts",
+    "corridors:catalog": "tsx examples/gen-corridor-catalog.ts",
     "sweep:anchors": "tsx examples/sweep-anchors.ts"
   },
   "dependencies": {

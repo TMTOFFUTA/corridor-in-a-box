@@ -1,8 +1,9 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { liveness, loadCorridor } from "@corridor/manifest";
+import { CATALOG_PATH, loadAllCorridors, renderCatalog } from "../scripts/corridor-catalog";
 
 export const MAX_VERIFIED_AGE_DAYS = 45;
 const CORRIDORS_DIR = fileURLToPath(new URL("../corridors/", import.meta.url));
@@ -75,5 +76,22 @@ describe("corridor manifests", () => {
     expect(isVerifiedDateFresh("2026-09-02", today)).toBe(false);
     expect(isVerifiedDateFresh("2026-10-19", today)).toBe(false);
     expect(isVerifiedDateFresh("2026-02-30", today)).toBe(false);
+  });
+});
+
+describe("corridor catalog", () => {
+  const repoRoot = fileURLToPath(new URL("../", import.meta.url));
+
+  it("matches corridors/README.md byte-for-byte; run `pnpm corridors:catalog` after a manifest change", () => {
+    const committed = readFileSync(join(repoRoot, CATALOG_PATH), "utf8");
+    expect(renderCatalog(loadAllCorridors(repoRoot))).toBe(committed);
+  });
+
+  it("lists every manifest once, ordered by id, regardless of load order", () => {
+    const corridors = loadAllCorridors(repoRoot);
+    const forward = renderCatalog(corridors);
+    expect(renderCatalog([...corridors].reverse())).toBe(forward);
+    const ids = [...forward.matchAll(/^\| `([^`]+)` \|/gm)].map((m) => m[1]);
+    expect(ids).toEqual([...corridors.map((c) => c.id)].sort());
   });
 });
