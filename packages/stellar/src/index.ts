@@ -869,7 +869,6 @@ export class StellarClaimableBalanceStrategy implements SettlementStrategy {
   readonly kind: DepositInstructionsKind = "claimable_balance";
   private readonly signer: ExternalSigner;
   private readonly server: HorizonServerLike;
-  private readonly inspector: AccountInspector;
   private readonly confirmTimeoutMs: number;
   private readonly now: () => number;
   private readonly sleep: (ms: number) => Promise<void>;
@@ -884,12 +883,6 @@ export class StellarClaimableBalanceStrategy implements SettlementStrategy {
     }
     this.signer = opts.signer ?? LocalKeypairSigner.fromSecret(opts.signerSecret as string);
     this.server = opts.horizonServer ?? new Horizon.Server(opts.horizonUrl);
-    this.inspector =
-      opts.inspector ??
-      new AccountInspector({
-        horizonServer: this.server,
-        horizonUrl: opts.horizonUrl,
-      });
     this.confirmTimeoutMs = opts.confirmTimeoutMs ?? 30_000;
     this.now = opts.now ?? (() => Date.now());
     this.sleep = opts.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
