@@ -7,6 +7,15 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — `pnpm create:adapter` ([#204](https://github.com/ezedike-evan/corridor-in-a-box/issues/204))
+
+- `pnpm create:adapter --id <slug> [--dir <path>]` scaffolds a custom `AnchorAdapter`
+  package: `package.json`, an adapter whose verbs all fail "not implemented", a
+  conformance test, a fixture corridor and a README checklist. The id must match
+  `^[a-z0-9-]+$` (the manifest's `custom:<id>` rule) and an existing directory is
+  never overwritten. `tests/create-adapter.test.ts` generates into a temp dir and
+  type-checks the result.
+
 ### Added — richer `SourceAnchorAdapter` port and mock ([#215](https://github.com/ezedike-evan/corridor-in-a-box/issues/215))
 
 - `SourceAnchorAdapter` (which the engine already used for source funding) gains
