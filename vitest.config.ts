@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
         "@corridor/manifest/liveness": r("./packages/manifest/src/liveness.ts"),
         "@corridor/manifest": r("./packages/manifest/src/index.ts"),
         "@corridor/probe": r("./packages/probe/src/index.ts"),
+        "@corridor/registry": r("./packages/registry/src/index.ts"),
+        "@corridor/attester": r("./packages/attester/src/index.ts"),
         "@corridor/adapter-kit": r("./packages/adapter-kit/src/index.ts"),
         "@corridor/sep31": r("./packages/sep31/src/index.ts"),
         "@corridor/sep6": r("./packages/sep6/src/index.ts"),
