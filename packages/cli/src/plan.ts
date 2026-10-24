@@ -13,6 +13,7 @@ import {
   type DestProtocol,
   type Liveness,
 } from "@corridor/manifest";
+import type { RegistryNetwork } from "./plan-registry.js";
 
 /** The five engine verbs, in execution order. */
 export type PlanVerb = "quote" | "comply" | "open" | "settle" | "reconcile";
@@ -281,16 +282,39 @@ export function formatPlan(c: Corridor, plan: Plan): string {
 }
 
 export type PlanArgs =
-  | { readonly ok: true; readonly file: string; readonly json: boolean }
+  | {
+      readonly ok: true;
+      readonly file: string;
+      readonly json: boolean;
+      /** `--registry`: also read the dest anchor's on-chain attestation. */
+      readonly registry: boolean;
+      /** Which registry deployment `--registry` reads (default testnet). */
+      readonly network: RegistryNetwork;
+    }
   | { readonly ok: false; readonly error: string };
 
-/** Parse `plan` arguments: one manifest path plus an optional `--json`. */
+const PLAN_USAGE =
+  "usage: corridor plan <file.corridor.yaml> [--json] [--registry [--network testnet|public]]";
+
+/** Parse `plan` arguments: one manifest path plus optional `--json` and `--registry`. */
 export function parsePlanArgs(args: readonly string[]): PlanArgs {
   let json = false;
+  let registry = false;
+  let network: RegistryNetwork | undefined;
   const files: string[] = [];
-  for (const arg of args) {
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i] as string;
     if (arg === "--json") {
       json = true;
+    } else if (arg === "--registry") {
+      registry = true;
+    } else if (arg === "--network") {
+      const value = args[i + 1];
+      if (value !== "testnet" && value !== "public") {
+        return { ok: false, error: "error: --network must be testnet or public" };
+      }
+      network = value;
+      i++;
     } else if (arg.startsWith("--")) {
       return { ok: false, error: `error: unknown option "${arg}"` };
     } else {
@@ -299,10 +323,14 @@ export function parsePlanArgs(args: readonly string[]): PlanArgs {
   }
   const [file] = files;
   if (!file) {
-    return { ok: false, error: "usage: corridor plan <file.corridor.yaml> [--json]" };
+    return { ok: false, error: PLAN_USAGE };
   }
   if (files.length > 1) {
     return { ok: false, error: `error: unexpected argument "${files[1]}"` };
   }
-  return { ok: true, file, json };
+  // A --network that nothing reads would look like it had been honoured.
+  if (network !== undefined && !registry) {
+    return { ok: false, error: "error: --network only applies with --registry" };
+  }
+  return { ok: true, file, json, registry, network: network ?? "testnet" };
 }
