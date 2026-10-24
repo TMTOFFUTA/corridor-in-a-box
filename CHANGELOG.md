@@ -7,6 +7,20 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — every library package builds to `dist/` with type declarations ([#262](https://github.com/ezedike-evan/corridor-in-a-box/issues/262))
+
+- Each `@corridor/*` package has a `tsup.config.ts` and a `build` script emitting ESM plus
+  `.d.ts`, conditional `exports` (`types`, `source`, `import`) and `"files": ["dist"]`, so
+  they can be consumed from npm by a plain Node or bundler project. Subpaths
+  (`router/testing`, `stellar/signers/*`, `cli/wire`) build too. In-repo code and tests still
+  run from source, so nothing about `pnpm test` changes.
+- `pnpm build` and `pnpm check:packages` (publint, are-the-types-wrong with the `esm-only`
+  profile, and `scripts/dist-smoke.mjs`, which imports the built router, adapter-kit,
+  manifest, engine and types from a plain Node ESM script) run in CI.
+  `tests/package-metadata.test.ts` now also requires the dist `exports`, `files` and `build`
+  script. With this, `scripts/release-check.ts` no longer refuses a release for exporting
+  TypeScript source.
+
 ### Added — an OpenAPI 3.1 spec for `@corridor/service`, tested against `route()` ([#264](https://github.com/ezedike-evan/corridor-in-a-box/issues/264))
 
 - `packages/service/openapi.yaml` describes every route (`/healthz`, `/readyz`, `/metrics`,

@@ -152,6 +152,22 @@ lists every quarantined test, its issue, and how it did in the job summary.
 `tests/quarantine.test.ts` fails if a `quarantine()` call has no issue URL.
 Once the issue is fixed, remove the wrapper.
 
+## Building the packages
+
+Every library package publishes built output: ESM plus type declarations in `dist/`,
+with conditional `exports` (`types`, `source`, `import`) and `"files": ["dist"]`.
+In-repo code and tests keep running from source (tsconfig `paths`, the vitest aliases),
+so a plain `pnpm test` needs no build.
+
+```bash
+pnpm build             # pnpm -r build: tsup per package, in dependency order
+pnpm check:packages    # publint, are-the-types-wrong (esm-only) and a plain-Node smoke test
+```
+
+CI runs both. Adding a package: give it a `tsup.config.ts`, the `exports`/`files`/`build`
+fields (`tests/package-metadata.test.ts` fails without them) and, if it has several entry
+points, one `exports` subpath each. `dist/` is git-ignored.
+
 ## Coverage
 
 `pnpm test:coverage` runs the suite under v8 coverage (`packages/*/src/**`) and fails
