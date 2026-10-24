@@ -205,6 +205,20 @@ export function buildPlan(c: Corridor): Plan {
   };
 }
 
+/**
+ * Steps that `endpoints_verified_at` says nothing about: the liveness gaps (an
+ * external quote), plus a SEP-38 quote with no quote_server to have checked.
+ */
+function uncoveredSteps(c: Corridor, plan: Plan): PlanStep[] {
+  const endpoints = c.dest.endpoints;
+  const quoteServer = "quote_server" in endpoints ? endpoints.quote_server : undefined;
+  const missingQuoteServer = c.fx.quote_source === "sep38" && !quoteServer;
+  return plan.steps.filter(
+    (step) =>
+      plan.liveness.gaps.includes(step.verb) || (step.verb === "quote" && missingQuoteServer),
+  );
+}
+
 /** Render the human-readable plan, including the same liveness block as before. */
 export function formatPlan(c: Corridor, plan: Plan): string {
   const lines: string[] = [];
@@ -253,7 +267,12 @@ export function formatPlan(c: Corridor, plan: Plan): string {
       `liveness: ✓✓ PROVEN — canary ${hashPrefix} completed ${date} (${daysAgo} days ago, expires in ${expiresIn}d)`,
     );
   } else if (live.state === "verified") {
-    line(`liveness: ✓ VERIFIED — endpoints confirmed ${live.verifiedAt} for all five steps`);
+    line(`liveness: ✓ VERIFIED — dest endpoints confirmed ${live.verifiedAt}`);
+    const uncovered = uncoveredSteps(c, plan);
+    if (uncovered.length > 0) {
+      const list = uncovered.map((step) => `${step.step}. ${step.verb} (${step.protocol})`);
+      line(`gaps:     not covered by endpoints_verified_at — ${list.join(", ")}`);
+    }
     const cap = c.proof?.canary_max_amount ?? c.limits?.max_amount ?? "default";
     if (c.proof) {
       // A proof is on file but liveness() did not honour it (stale, future-dated):
