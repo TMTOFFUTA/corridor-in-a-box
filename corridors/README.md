@@ -8,6 +8,7 @@ runnable.
 
 | id | route | dest | dest asset | network | liveness | verified | note |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `mock` | USD → USDC → USD | Local Mock Anchor | iso4217:USD | testnet | unverified | — | LOCAL MOCK — examples/mock-anchor on localhost:8089. Fictional; scriptable failures. Not a real anchor. |
 | `mx-example` | USD → USDC → MXN | Mexico Off-Ramp (example — not a real anchor) | iso4217:MXN | public | unverified | — | TEMPLATE — endpoints are fictional placeholders. No anchor relationship exists. Not runnable. |
 | `ng-cn` | NGN → USDC → CNY | China RMB Off-Ramp (does not exist yet) | iso4217:CNY | public | not runnable | — | PENDING — no compliant RMB SEP-31 off-ramp exists yet (checked 2026-10-18: no directory anchor offers CNY/CNH/HKD payout or SEP-31 for CN/HK). dest endpoints unfilled. |
 | `ng-cowrie` | USD → USDC → NGN | Cowrie Exchange (Nigeria) | iso4217:NGN | public | verified | 2026-10-17 | REAL — Cowrie Exchange (Lagos, Nigeria), confirmed 2026-10-17. No SEP-38, no payment attempted, no business relationship in place. |

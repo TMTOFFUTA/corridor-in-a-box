@@ -29,6 +29,16 @@ pnpm lint                # eslint + prettier --check
 pnpm example             # run a payment end-to-end (mocked anchor + settle)
 ```
 
+`pnpm mock:anchor` is the quickest way to run a whole corridor locally. It starts a
+small SEP-1/10/12/31/38 server on `localhost:8089` (`corridors/mock.corridor.yaml`
+points at it) that can misbehave on demand: `--scenario stall | kyc_reject |
+quote_expired | error_after_settle | refund_full | refund_partial |
+slow_pending_external` (default `happy`), switchable while running with
+`POST /__control/scenario`. It needs no containers and no Stellar payment: the
+server marks a transaction paid when told (`POST /__control/received`) or after
+`--receive-after-polls N` polls. `tests/mock-anchor.test.ts` drives `execute()`
+through the scenarios. It is a fictional anchor and not a security boundary.
+
 Node 22+ and pnpm 9+ are required (see `.nvmrc` and `packageManager` in
 `package.json`), and the contracts need a Rust toolchain with the
 `wasm32v1-none` target. The dev container below sets all of it up for you.

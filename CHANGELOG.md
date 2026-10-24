@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — `pnpm mock:anchor`, a scriptable mock SEP-31 anchor ([#299](https://github.com/ezedike-evan/corridor-in-a-box/issues/299))
+
+- `examples/mock-anchor/server.ts` serves SEP-1, SEP-10, SEP-12, SEP-31 and SEP-38
+  over `node:http` with no new runtime dependency, and reproduces anchor misbehaviour
+  on demand: `stall`, `kyc_reject`, `quote_expired`, `error_after_settle`,
+  `refund_full`, `refund_partial`, `slow_pending_external`. A transaction is marked
+  paid when told (or after N polls), so no Stellar payment is needed.
+- `corridors/mock.corridor.yaml` (testnet) points at it; `corridor plan` validates it
+  and reports it UNVERIFIED, as it should for a fictional lane.
+- `tests/mock-anchor.test.ts` drives `execute()` through every scenario.
+
 ### Added — `pnpm create:adapter` ([#204](https://github.com/ezedike-evan/corridor-in-a-box/issues/204))
 
 - `pnpm create:adapter --id <slug> [--dir <path>]` scaffolds a custom `AnchorAdapter`
