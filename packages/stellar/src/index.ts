@@ -112,6 +112,16 @@ export class LocalKeypairSigner implements ExternalSigner {
 
 export { assertSignerProducesValidSignatures } from "./signers/conformance";
 export { VaultTransitSigner, type VaultTransitSignerOptions } from "./signers/vault-transit";
+export {
+  GcpKmsSigner,
+  type GcpKmsClientLike,
+  type GcpKmsSignerOptions,
+} from "./signers/gcp-kms";
+export {
+  AwsKmsSigner,
+  type AwsKmsClientLike,
+  type AwsKmsSignerOptions,
+} from "./signers/aws-kms";
 
 function isKeypair(s: ExternalSigner | Keypair): s is Keypair {
   // Keypair exposes publicKey() as a method; ExternalSigner as a string property.

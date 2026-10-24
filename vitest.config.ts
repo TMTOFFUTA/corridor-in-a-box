@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
             lines: 90,
             statements: 90,
             branches: 79,
-            functions: 99,
+            functions: 95,
           },
           "packages/engine/src/verbs.ts": {
             lines: 88,

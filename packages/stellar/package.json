@@ -24,7 +24,9 @@
     "node": ">=22"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./signers/gcp": "./src/signers/gcp-kms.ts",
+    "./signers/aws": "./src/signers/aws-kms.ts"
   },
   "main": "./src/index.ts",
   "dependencies": {

@@ -41,9 +41,9 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
       >
         {copied ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
       </button>
-      <span role="status" className="sr-only">
+      <output className="sr-only">
         {copied ? `${label} copied` : failed ? `Could not copy ${label}` : ""}
-      </span>
+      </output>
     </>
   );
 }

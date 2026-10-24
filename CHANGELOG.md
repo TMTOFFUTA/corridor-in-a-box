@@ -29,6 +29,18 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
   provenance and an SBOM, after the same smoke test. Actions pinned by SHA.
 - Not yet run on a Docker daemon by the author; the CI `docker` job is the first build.
 
+### Added — AWS KMS and Google Cloud KMS `ExternalSigner`s ([#277](https://github.com/ezedike-evan/corridor-in-a-box/issues/277))
+
+- `AwsKmsSigner` (`ECC_NIST_EDWARDS25519`, `ED25519_SHA_512`, `MessageType: RAW`) and
+  `GcpKmsSigner` (`EC_SIGN_ED25519`, hash in `data`) in `@corridor/stellar`, also at the
+  `@corridor/stellar/signers/aws` and `/gcp` subpaths. They take a structural client, so no
+  cloud SDK is imported. The G address comes from the KMS public key; a key of the wrong
+  type is refused at `create()`, and a wrong-length or wrong-key signature is rejected
+  before it is returned. Provider docs and least-privilege IAM are in
+  `docs/key-management.md`.
+- Tested with fake clients that sign with a real local ed25519 key, through
+  `assertSignerProducesValidSignatures`.
+
 ### Added — one tag releases every public package ([#263](https://github.com/ezedike-evan/corridor-in-a-box/issues/263))
 
 - `.github/workflows/release-packages.yml`: a `vX.Y.Z` tag runs lint, typecheck, tests

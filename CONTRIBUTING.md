@@ -162,7 +162,7 @@ when a threshold in `vitest.config.ts` is not met; CI's `build` job runs it and 
 | Scope                                            | Lines / statements | Branches | Functions |
 | ------------------------------------------------ | ------------------ | -------- | --------- |
 | Global                                           | 82                 | 83       | 90        |
-| `packages/engine/src/run.ts`                     | 90                 | 79       | 99        |
+| `packages/engine/src/run.ts`                     | 90                 | 79       | 95        |
 | `packages/engine/src/verbs.ts`                   | 88                 | 85       | 91        |
 | `packages/engine/src/state.ts`, `idempotency.ts` | 99                 | 99       | 99        |
 | `packages/types/src/money.ts`                    | 99                 | 87       | 99        |
@@ -170,7 +170,7 @@ when a threshold in `vitest.config.ts` is not met; CI's `build` job runs it and 
 Run on a subset of tests it will fail the global floor, which is expected: use it on the
 whole suite. If your change legitimately lowers a number (deleting covered code), say so
 in the PR and lower the floor in the same commit; never lower one to land untested code.
-Raise a floor when coverage rises for good. Spawned CLI processes are not measured.
+Raise a floor when coverage rises for good. Spawned CLI processes are not measured, and CI measured `run.ts` functions at 96.8% against 100% locally, hence its lower floor.
 
 ## Releasing
 

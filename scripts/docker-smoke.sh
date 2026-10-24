@@ -16,7 +16,7 @@ if [ "$uid" = "0" ]; then
   exit 1
 fi
 
-stray="$(docker run --rm --entrypoint sh "$image" -c 'find / -xdev \( -name ".env" -o -name ".env.*" \) -not -path "*/node_modules/*" 2>/dev/null')"
+stray="$(docker run --rm --entrypoint sh "$image" -c 'find / -xdev \( -name ".env" -o -name ".env.*" \) -not -path "*/node_modules/*" 2>/dev/null || true')"
 if [ -n "$stray" ]; then
   echo "::error::image contains env files:" >&2
   echo "$stray" >&2
