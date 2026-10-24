@@ -7,6 +7,18 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — property tests for the registry contract ([#283](https://github.com/ezedike-evan/corridor-in-a-box/issues/283))
+
+- `contracts/registry/src/prop_test.rs` (dev-dependency `proptest`, 48 cases per
+  property, no regression files) checks: `serves_sep31` / `serves_sep6` are true iff the
+  SEP is advertised and its probe passed; `probes_passed` is always a subset of
+  `probes_run` and a violation writes nothing; unknown bits are refused; `staleness`
+  equals the ledger minus `attested_ledger` and never underflows; bounded-length
+  domains round-trip, are listed once and decode to the stored bitmap; a writer other
+  than the enrolled attester can never write. No contract logic changed.
+- Adding `proptest` moved `cc` (1.4.2 to 1.5.1) and `find-msvc-tools` in
+  `contracts/Cargo.lock`; both are build-time only.
+
 ### Added — seeded property tests for the service body and the manifest loader ([#282](https://github.com/ezedike-evan/corridor-in-a-box/issues/282))
 
 - `tests/service-properties.test.ts` and `tests/manifest-properties.test.ts` run 600
