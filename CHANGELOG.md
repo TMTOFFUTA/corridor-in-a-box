@@ -7,6 +7,28 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — coverage thresholds in CI ([#280](https://github.com/ezedike-evan/corridor-in-a-box/issues/280))
+
+- `pnpm test:coverage` (`@vitest/coverage-v8`) enforces global floors and stricter ones
+  for `engine/src/{run,verbs,state,idempotency}.ts` and `types/src/money.ts`; CI's `build`
+  job runs it and uploads `coverage/lcov.info`. The numbers are in `CONTRIBUTING.md`.
+
+### Added — attester, full hash and explorer links on `AnchorCard` ([#290](https://github.com/ezedike-evan/corridor-in-a-box/issues/290))
+
+- The web card links the attested ledger and the attester to stellar.expert for the
+  registry's network and shows the full toml sha256 with a copy button.
+
+### Added — a Dockerfile for the service, published to GHCR on release ([#271](https://github.com/ezedike-evan/corridor-in-a-box/issues/271))
+
+- `Dockerfile` (multi-stage, `node:22-slim`, `USER node`, `HEALTHCHECK` on `/healthz`,
+  `EXPOSE 8080`, read-only `corridors/`) and `.dockerignore` (no `.env*`, `web/`,
+  `contracts/target`). Same env contract as `pnpm serve`; secrets are passed at runtime.
+- CI builds the image on pull requests (no push) and `scripts/docker-smoke.sh` checks it
+  runs as non-root, contains no `.env`, and answers `/healthz`.
+- `docker-publish.yml` pushes `ghcr.io/<owner>/corridor-service` on `vX.Y.Z` tags with
+  provenance and an SBOM, after the same smoke test. Actions pinned by SHA.
+- Not yet run on a Docker daemon by the author; the CI `docker` job is the first build.
+
 ### Added — AWS KMS and Google Cloud KMS `ExternalSigner`s ([#277](https://github.com/ezedike-evan/corridor-in-a-box/issues/277))
 
 - `AwsKmsSigner` (`ECC_NIST_EDWARDS25519`, `ED25519_SHA_512`, `MessageType: RAW`) and

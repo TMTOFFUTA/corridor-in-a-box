@@ -627,6 +627,28 @@ not that a step was skipped.
   in-flight payments instead of severing one mid-settle.
 - Terminate TLS at your ingress; the built-in `node:http` server speaks plain HTTP.
 
+### Running the service as a container
+
+The repo's `Dockerfile` builds the service image: Node 22, non-root (`USER node`),
+`EXPOSE 8080`, a `HEALTHCHECK` on `/healthz`, and the `corridors/` manifests copied in
+root-owned and read-only. It runs `examples/run-service.ts`, so the env contract is the
+one in that file's header.
+
+```bash
+docker build -t corridor-service .
+docker run --rm -p 8080:8080 \
+  -e CORRIDOR_SIGNER_SECRET=S… -e DATABASE_URL=postgres://… -e CORRIDOR_API_KEYS=… \
+  corridor-service
+```
+
+**Signer secrets are passed at runtime, never built in.** Nothing secret is in the image
+(`.dockerignore` excludes every `.env*`, and CI fails if one is present), and an image
+that carried a seed would hand it to anyone who can pull it. Use `CORRIDOR_SIGNER=vault`
+(see [docs/key-management.md](./key-management.md)) rather than a seed in the
+container's environment for anything that moves real money. Tagged releases are
+published to `ghcr.io/<owner>/corridor-service` with provenance and an SBOM; pull
+requests build and smoke-test the image without pushing it.
+
 ## 6. Versioning & releases
 
 - The project follows [Semantic Versioning](https://semver.org). **While pre-1.0,
