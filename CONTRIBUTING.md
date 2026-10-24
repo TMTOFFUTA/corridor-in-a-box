@@ -152,6 +152,25 @@ lists every quarantined test, its issue, and how it did in the job summary.
 `tests/quarantine.test.ts` fails if a `quarantine()` call has no issue URL.
 Once the issue is fixed, remove the wrapper.
 
+## Releasing
+
+Maintainers only. Pushing a `vX.Y.Z` tag runs `.github/workflows/release-packages.yml`,
+which tests, builds and publishes every public `@corridor/*` package with provenance
+and creates the GitHub Release. (`cli-vX.Y.Z` tags still publish `@corridor/cli` alone,
+via `release.yml`.) Checklist:
+
+1. Move `## [Unreleased]` in `CHANGELOG.md` to a dated `## [X.Y.Z] - YYYY-MM-DD`
+   section and open a fresh empty `Unreleased`. That section is the release body.
+2. Set `version` to `X.Y.Z` in **every** public `packages/*/package.json` (a package
+   that must not ship is `"private": true`).
+3. `pnpm lint && pnpm typecheck && pnpm test && pnpm -r build` is green on `main`.
+4. `pnpm exec tsx scripts/release-check.ts vX.Y.Z` prints `release vX.Y.Z: ok`. The
+   workflow runs the same check first and refuses to publish when a public package's
+   version is not the tag's, the CHANGELOG section is missing, or a package still
+   exports TypeScript source rather than a built `dist/`.
+5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The repo secret
+   `NPM_TOKEN` must be an npm automation token with publish rights to `@corridor`.
+
 ## Commit messages
 
 We use [Conventional Commits](https://www.conventionalcommits.org/) prefixes

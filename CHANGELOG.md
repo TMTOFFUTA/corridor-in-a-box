@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — one tag releases every public package ([#263](https://github.com/ezedike-evan/corridor-in-a-box/issues/263))
+
+- `.github/workflows/release-packages.yml`: a `vX.Y.Z` tag runs lint, typecheck, tests
+  and `pnpm -r build`, publishes every public package with provenance, and creates a
+  GitHub Release from that version's CHANGELOG section. All actions are pinned by SHA.
+- `scripts/release-check.ts` makes the workflow refuse when a public package's version
+  is not the tag's, the CHANGELOG has no section for it, or a package still exports
+  TypeScript source (so nothing is published until #262 gives each library a `dist/`).
+  `scripts/changelog-section.ts` extracts the release notes. Both are unit-tested.
+- "Releasing" checklist in `CONTRIBUTING.md`. Cutting the first tag is a maintainer action.
+
 ### Added — property tests for the registry contract ([#283](https://github.com/ezedike-evan/corridor-in-a-box/issues/283))
 
 - `contracts/registry/src/prop_test.rs` (dev-dependency `proptest`, 48 cases per
