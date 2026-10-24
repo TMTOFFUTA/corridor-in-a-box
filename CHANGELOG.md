@@ -7,6 +7,18 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — seeded property tests for the service body and the manifest loader ([#282](https://github.com/ezedike-evan/corridor-in-a-box/issues/282))
+
+- `tests/service-properties.test.ts` and `tests/manifest-properties.test.ts` run 600
+  generated cases per property, with no dependency (`tests/helpers/seeded.ts`). A
+  failure prints the seed and case index; `SEED=<n>` replays it.
+- Service: `route()` never throws or answers 5xx for random or mutated bodies and
+  paths, never settles for a body an independent oracle calls invalid, and a
+  `__proto__` key never reaches `Object.prototype`.
+- Manifest: the loader returns `ok:false` instead of throwing for dropped, retyped,
+  oversized and poisoned fields and for YAML aliases; any `ok:true` result satisfies
+  the schema invariants and parses to itself again.
+
 ### Added — `pnpm mock:anchor`, a scriptable mock SEP-31 anchor ([#299](https://github.com/ezedike-evan/corridor-in-a-box/issues/299))
 
 - `examples/mock-anchor/server.ts` serves SEP-1, SEP-10, SEP-12, SEP-31 and SEP-38
