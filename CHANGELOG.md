@@ -29,6 +29,16 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
   provenance and an SBOM, after the same smoke test. Actions pinned by SHA.
 - Not yet run on a Docker daemon by the author; the CI `docker` job is the first build.
 
+### Added — `@corridor/otel`, OpenTelemetry adapters for `Metrics` and `Logger` ([#273](https://github.com/ezedike-evan/corridor-in-a-box/issues/273))
+
+- New package `@corridor/otel`: `otelMetrics(meter)` (counter per name for `increment`,
+  millisecond histogram for `timing`, tags as attributes) and `otelLogger(logger)`
+  (`LogLevel` to severity, fields to attributes, emitted in the active context, `child()`
+  supported). `@opentelemetry/api` and `api-logs` are peer dependencies; the engine imports
+  nothing from OpenTelemetry.
+- `tests/otel.test.ts` uses the SDK's `InMemoryMetricExporter` and asserts counter and
+  histogram values after an `execute()` run. Wiring example in `docs/operations.md` §7.
+
 ### Added — AWS KMS and Google Cloud KMS `ExternalSigner`s ([#277](https://github.com/ezedike-evan/corridor-in-a-box/issues/277))
 
 - `AwsKmsSigner` (`ECC_NIST_EDWARDS25519`, `ED25519_SHA_512`, `MessageType: RAW`) and

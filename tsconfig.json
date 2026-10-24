@@ -26,6 +26,7 @@
       "@corridor/engine": ["./packages/engine/src/index.ts"],
       "@corridor/stellar": ["./packages/stellar/src/index.ts"],
       "@corridor/service": ["./packages/service/src/index.ts"],
+      "@corridor/otel": ["./packages/otel/src/index.ts"],
       "@corridor/cli": ["./packages/cli/src/index.ts"],
       "@corridor/cli/*": ["./packages/cli/src/*"]
     }

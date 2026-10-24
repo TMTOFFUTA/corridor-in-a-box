@@ -678,6 +678,29 @@ const service = createService({
 });
 ```
 
+### OpenTelemetry
+
+For an OTLP backend instead of Prometheus, `@corridor/otel` bridges the same two ports.
+`@opentelemetry/api` and `@opentelemetry/api-logs` are peer dependencies, so you choose
+the versions, SDK and exporters; the engine itself imports no OpenTelemetry.
+
+```ts
+import { metrics } from "@opentelemetry/api";
+import { logs } from "@opentelemetry/api-logs";
+import { otelLogger, otelMetrics } from "@corridor/otel";
+
+const deps = {
+  ...engineDeps,
+  metrics: otelMetrics(metrics.getMeter("corridor")), // increment -> Counter, timing -> Histogram (ms)
+  logger: otelLogger(logs.getLogger("corridor")), // LogLevel -> severity; fields -> attributes
+};
+```
+
+Each metric name becomes one instrument, tags become attributes. Log records are emitted in
+the active context, so the SDK stamps them with the current trace and span ids, and the
+`requestId` / `traceparent` fields the engine already records travel as attributes. That
+correlates logs with your traces; it does not create spans (a span per verb is a follow-up).
+
 Point Prometheus at `/metrics`. The two alerts that matter both key off the
 terminal counter — they catch money that stopped needing a human (see §2):
 
