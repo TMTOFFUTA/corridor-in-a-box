@@ -598,9 +598,27 @@ not that a step was skipped.
     correct across replicas — the `IdempotencyStore` interface is the seam.
   - Inject a shared rate limiter via `ServiceOptions.rateLimiter` (the
     `RateLimiter` interface; `take()` may be async). The default `TokenBucket`
-    is per-process; a Redis token bucket (a small `EVAL` Lua script doing
-    refill-then-decrement against a per-client key) enforces the limit fleet-wide.
-    Without it, each replica grants the full bucket independently.
+    is per-process; `RedisTokenBucket` (from `@corridor/service`) keeps the
+    bucket in Redis, so one limit holds fleet-wide. Without it, each replica
+    grants the full bucket independently. It needs only a one-method
+    `RedisLike { eval(script, keys, args) }`, so adapt whichever client you use:
+
+    ```ts
+    import { RedisTokenBucket } from "@corridor/service";
+
+    const limiter = new RedisTokenBucket(
+      // ioredis; node-redis: client.eval(script, { keys, arguments: args.map(String) })
+      { eval: (script, keys, args) => client.eval(script, keys.length, ...keys, ...args) },
+      { capacity: 60, refillPerSec: 1 },
+      { onError: "closed" }, // or "open"; see below
+    );
+    ```
+
+    The bucket refills inside Redis (`TIME` is the clock, so replicas with skewed
+    clocks agree) and expires once an idle bucket would have fully refilled.
+    When Redis errors, `onError: "closed"` (the default) answers 429 and logs a
+    line without the key; `"open"` admits the request. Pick closed unless
+    availability matters more than the limit.
 - Set `maxBodyBytes` on the service for your payload size (default 64 KiB).
 - Enable `trustProxy` **only** behind an ingress that sets `X-Forwarded-For` and
   strips any client-supplied value; otherwise leave it off so the socket peer

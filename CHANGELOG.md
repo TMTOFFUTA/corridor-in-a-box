@@ -7,6 +7,16 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — `RedisTokenBucket`, a fleet-wide rate limiter ([#270](https://github.com/ezedike-evan/corridor-in-a-box/issues/270))
+
+- `RedisTokenBucket` in `@corridor/service` implements `RateLimiter` against a
+  structural `RedisLike`, so neither ioredis nor node-redis is a dependency. An
+  atomic Lua script refills and takes a token, reads the clock from Redis `TIME`
+  and expires idle buckets. `onError` chooses fail-closed (default, 429 and a log
+  line) or fail-open when Redis errors.
+- Unit tests run the logic against a fake `RedisLike`; an opt-in integration test
+  (`CORRIDOR_TEST_REDIS_URL`) runs the real script, and CI has a `redis:7` job.
+
 ### Fixed — Prometheus exposition conformance (#274)
 
 - Added HELP metadata to emitted metric families and changed timing metrics from

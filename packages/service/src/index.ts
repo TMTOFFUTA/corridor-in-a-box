@@ -1061,3 +1061,10 @@ export class CallbackVerifier {
     }
   }
 }
+
+export {
+  RedisTokenBucket,
+  TOKEN_BUCKET_LUA,
+  type RedisLike,
+  type RedisTokenBucketOptions,
+} from "./redis-rate-limiter";
