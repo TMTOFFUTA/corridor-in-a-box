@@ -88,6 +88,18 @@ jobs:
       - name: Health gate
         run: scripts/reference-anchor.sh doctor
 
+      # Every run settles real testnet USDC from the signer and nothing else
+      # refills it, so without this the account drains and the job goes red with
+      # op_underfunded. fund:testnet is idempotent about the trustline, and with
+      # FUND_MIN_BALANCE it pays only when the balance is low (a run settles
+      # 10 USDC), so a healthy signer does not drain the distribution account.
+      - name: Top up the signer
+        run: pnpm fund:testnet
+        env:
+          CORRIDOR_SIGNER_SECRET: ${{ env.SIGNER_SECRET }}
+          FUND_AMOUNT: "100"
+          FUND_MIN_BALANCE: "50"
+
       - name: Run the corridor to completed
         run: pnpm verify:corridor
         env:

@@ -3,6 +3,10 @@
 //
 //   CORRIDOR_SIGNER_SECRET=S... pnpm fund:testnet
 //
+// Set FUND_MIN_BALANCE to top up only when the account holds less than that
+// much of the asset. The scheduled reference-corridor workflow does, so a
+// signer that is already stocked does not drain the shared distribution account.
+//
 // A friendbot-funded account holds XLM and nothing else, so the settle leg fails
 // with `op_src_no_trust` the moment a corridor's bridge asset is a credit asset.
 // This adds the trustline and pulls a small amount from the Anchor Platform
@@ -27,6 +31,8 @@ import {
 
 const HORIZON = process.env.HORIZON_URL ?? "https://horizon-testnet.stellar.org";
 const AMOUNT = process.env.FUND_AMOUNT ?? "100";
+/** Skip the payment when the receiver already holds at least this much. Unset: always pay. */
+const MIN_BALANCE = process.env.FUND_MIN_BALANCE;
 
 /** The reference server's test distribution account (testnet, public config). */
 const DISTRIBUTION_SECRET =
@@ -78,7 +84,15 @@ async function main(): Promise<void> {
     console.log("trustline:   created");
   }
 
-  // 2. Move the asset across.
+  // 2. Move the asset across, unless the account is already stocked.
+  const held = receiverAccount.balances.find(
+    (b) => "asset_code" in b && b.asset_code === ASSET_CODE && b.asset_issuer === ASSET_ISSUER,
+  )?.balance;
+  if (MIN_BALANCE !== undefined && held !== undefined && Number(held) >= Number(MIN_BALANCE)) {
+    console.log(`balance:     ${held} ${ASSET_CODE} >= ${MIN_BALANCE}, no top-up needed`);
+    return;
+  }
+
   const distributorAccount = await server.loadAccount(distributor.publicKey());
   const payment = new TransactionBuilder(distributorAccount, {
     fee: BASE_FEE,
