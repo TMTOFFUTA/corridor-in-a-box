@@ -145,6 +145,23 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec vitest run --no-file-parallelism tests/integration/redis-rate-limiter.test.ts
 
+  # Builds the service image (no push) and smoke-tests the container: non-root, no
+  # .env baked in, /healthz answers. Publishing is docker-publish.yml, on tags.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          load: true
+          push: false
+          tags: corridor-service:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - run: scripts/docker-smoke.sh corridor-service:ci
+
   # The web/ showcase app is a standalone Next.js project with its own lockfile
   # (intentionally outside the pnpm workspace, see web/README.md), so it gets its
   # own job rather than riding the monorepo gate above.

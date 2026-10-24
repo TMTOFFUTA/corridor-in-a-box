@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — a Dockerfile for the service, published to GHCR on release ([#271](https://github.com/ezedike-evan/corridor-in-a-box/issues/271))
+
+- `Dockerfile` (multi-stage, `node:22-slim`, `USER node`, `HEALTHCHECK` on `/healthz`,
+  `EXPOSE 8080`, read-only `corridors/`) and `.dockerignore` (no `.env*`, `web/`,
+  `contracts/target`). Same env contract as `pnpm serve`; secrets are passed at runtime.
+- CI builds the image on pull requests (no push) and `scripts/docker-smoke.sh` checks it
+  runs as non-root, contains no `.env`, and answers `/healthz`.
+- `docker-publish.yml` pushes `ghcr.io/<owner>/corridor-service` on `vX.Y.Z` tags with
+  provenance and an SBOM, after the same smoke test. Actions pinned by SHA.
+- Not yet run on a Docker daemon by the author; the CI `docker` job is the first build.
+
 ### Added — one tag releases every public package ([#263](https://github.com/ezedike-evan/corridor-in-a-box/issues/263))
 
 - `.github/workflows/release-packages.yml`: a `vX.Y.Z` tag runs lint, typecheck, tests
