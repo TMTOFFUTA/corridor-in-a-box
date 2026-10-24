@@ -7,6 +7,16 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — richer `SourceAnchorAdapter` port and mock ([#215](https://github.com/ezedike-evan/corridor-in-a-box/issues/215))
+
+- `SourceAnchorAdapter` (which the engine already used for source funding) gains
+  optional `name`, `capabilities()`, `quoteDeposit()` and an optional `{ account }`
+  context on `openDeposit`, and `openDeposit` can return `FundingInstructions`
+  (opaque, PII-free text for the operator). All additions are optional, so existing
+  adapters and the engine are unchanged.
+- `createMockSourceAdapter` takes `name`, `pendingPolls`, `failOpen` and
+  `instructions`, and is unit-tested in `tests/adapter-kit.test.ts`.
+
 ### Added — `RedisTokenBucket`, a fleet-wide rate limiter ([#270](https://github.com/ezedike-evan/corridor-in-a-box/issues/270))
 
 - `RedisTokenBucket` in `@corridor/service` implements `RateLimiter` against a
