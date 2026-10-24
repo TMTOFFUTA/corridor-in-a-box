@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Added — an OpenAPI 3.1 spec for `@corridor/service`, tested against `route()` ([#264](https://github.com/ezedike-evan/corridor-in-a-box/issues/264))
+
+- `packages/service/openapi.yaml` describes every route (`/healthz`, `/readyz`, `/metrics`,
+  `POST /payments`, `GET /payments/{key}`, the SEP-31 callback), the request and response
+  bodies, the bearer scheme, and every status the service answers, including the full
+  error-code table. `STATUS_BY_CODE` is now exported so the test can hold the spec to it.
+- `tests/openapi.test.ts` validates the responses `route()` actually produces against the
+  spec's response schemas (ajv, a devDependency only; the service stays dependency-free) and
+  fails if a route returns a shape the spec does not allow, or an error code or status goes
+  undocumented. CI also lints the document with Redocly.
+
 ### Added — coverage thresholds in CI ([#280](https://github.com/ezedike-evan/corridor-in-a-box/issues/280))
 
 - `pnpm test:coverage` (`@vitest/coverage-v8`) enforces global floors and stricter ones

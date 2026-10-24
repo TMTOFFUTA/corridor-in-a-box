@@ -58,6 +58,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
+      # The service's OpenAPI 3.1 document must be valid. (tests/openapi.test.ts checks it
+      # against the real route(); this checks it against the OpenAPI specification.)
+      - run: pnpm --package=@redocly/cli@1.34.5 dlx redocly lint packages/service/openapi.yaml
       # The suite, with coverage thresholds enforced (vitest.config.ts).
       - run: pnpm test:coverage
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

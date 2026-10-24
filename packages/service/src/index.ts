@@ -195,7 +195,7 @@ const contextOf = (req: RouteRequest): RequestContext => {
   return { requestId, ...(traceparent ? { traceparent } : {}) };
 };
 
-const STATUS_BY_CODE: Record<CorridorErrorCode, number> = {
+export const STATUS_BY_CODE: Record<CorridorErrorCode, number> = {
   MANIFEST_INVALID: 422,
   MANIFEST_CHANGED: 409,
   CAPABILITY_MISMATCH: 422,
