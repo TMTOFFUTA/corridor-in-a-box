@@ -291,7 +291,7 @@
   },
   {
     "id": "testanchor-sep6",
-    "status_note": "SDF Test Anchor (testanchor.stellar.org) on testnet via SEP-6. Endpoints read from its stellar.toml 2026-10-17. No payment attempted. liveness() does not yet understand SEP-6 endpoints, so plan reports NOT runnable.",
+    "status_note": "SDF Test Anchor (testanchor.stellar.org) on testnet via SEP-6. Endpoints read from its stellar.toml 2026-10-17. No payment attempted; plan reports it VERIFIED from those endpoints alone.",
     "source": {
       "name": "Testnet Sending Anchor",
       "asset": "USDC",

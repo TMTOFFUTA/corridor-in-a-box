@@ -352,10 +352,14 @@ Two independent constraints, same conclusion:
    back on the transaction record. There is nothing for the engine to call.
 
 So when recovery wants to return money that has already left the distribution
-account, the engine cannot do it. It parks the run in `held` and a human
-resolves it with the anchor, out of band. The only "automated refund" in this
-system is the no-op case: nothing had gone out yet, so there was nothing to
-reverse (that is what `refunded` means — see below).
+account, the engine cannot do it. What it can do is wait: if the receiving
+anchor reports a terminal failure it is already refunding, the run enters
+`refund_pending` and the engine watches the anchor's transaction record for the
+refund it owns (see [`refund_pending`](#refund_pending)). A full report records
+`refunded`; a partial one, or silence past `recovery.refund_wait_seconds`, parks
+the run in `held` and a human resolves it with the anchor, out of band. The only
+refund the engine performs itself is the no-op case: nothing had gone out yet,
+so there was nothing to reverse. The engine never calls `requestRefund`.
 
 ### `held`
 
@@ -399,19 +403,19 @@ status history for the transaction to see why it never progressed.
 
 ### `refunded`
 
-**The engine believes no on-chain payment went out.** Despite the name, nothing
-was reversed — nothing can be (see
-[why there is no automated refund](#why-there-is-no-automated-refund)). In
-today's engine this state is reachable only when settlement never succeeded
-under a `refund_sender` policy: the engine found no `stellar_tx_hash` on the
-run, so there was nothing to undo, and it recorded `refunded` without touching
-the chain. Verify the belief before closing the run:
+`refunded` is reached two ways, and the run's trail and `refund_id` tell them apart.
 
-- `stellar_tx_hash` must be **unset**. If it IS set (with the real
-  `StellarSettlementSubmitter` that combination should be impossible; the
-  mock's `refund()` does succeed, so test data can produce it), money left the
-  account and the state is lying — treat the run as `held`, follow the steps
-  above, and file a bug.
+**1. Nothing went out.** The engine found no `stellar_tx_hash` on the run under a
+`refund_sender` policy, so there was nothing to undo and it recorded `refunded`
+without touching the chain. Despite the name, nothing was reversed — nothing can be
+(see [why there is no automated refund](#why-there-is-no-automated-refund)). Verify
+the belief before closing the run:
+
+- `stellar_tx_hash` must be **unset**. If it IS set and the trail never passed
+  through `refund_pending` (with the real `StellarSettlementSubmitter` that
+  combination should be impossible; the mock's `refund()` does succeed, so test data
+  can produce it), money left the account and the state is lying — treat the run as
+  `held`, follow the steps above, and file a bug.
 - An unset hash is the engine's belief, not proof: an **ambiguous submission**
   can land on-chain without the engine ever learning the hash (the submit
   succeeded but confirmation timed out on Horizon read lag, or the send itself
@@ -420,11 +424,11 @@ the chain. Verify the belief before closing the run:
   payments (the same check "Crash mid-flight" below prescribes for `settling`)
   before declaring the sender whole.
 
-The state machine defines `refund_pending` (between `recovering` and `refunded`)
-but no transition enters it yet — the engine does not call `requestRefund`. When
-a producer lands, a payment that did go out and was returned by the anchor will
-enter `refund_pending` with `stellar_tx_hash` set. The run's trail tells the
-two apart — and `refund_id`, described below, records which refund it was.
+**2. The anchor refunded.** The payment did go out (`stellar_tx_hash` is set), the
+receiving anchor reported a terminal failure, and the run passed through
+[`refund_pending`](#refund_pending) until the anchor's own refund report arrived in
+full. `refund_id` holds the first refund payment's id. The engine did not request
+or perform this refund; it observed it. The engine never calls `requestRefund`.
 
 ### `refund_id` on the run
 

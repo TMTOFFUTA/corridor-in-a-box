@@ -7,6 +7,25 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reache
 
 ## [Unreleased]
 
+### Fixed — stale documentation and comments
+
+- Docs said no transition enters `refund_pending` and that `refunded` is reachable only when
+  nothing settled. The engine does enter it (after a payment has gone out and the anchor
+  reports a terminal failure) and watches the anchor's refund report; it never calls
+  `requestRefund`. Corrected in `docs/operations.md`, `docs/sep-coverage.md`, the `sep31`
+  adapter comment and the ROADMAP.
+- `testanchor-sep6` claimed `liveness()` does not understand SEP-6; `corridor plan` reports it
+  VERIFIED (since #517). The corridor catalog and web data are regenerated.
+- ROADMAP and README now list what shipped (Zeam and SEP-6 lanes, KMS signers, OpenTelemetry,
+  Redis limiter, OpenAPI, container image, release workflow, mock anchor); the web docs gain
+  the pre-settle and `ROUTE_REFUSED` status codes, `/readyz`, the callback route and `otel`.
+- `docs/mainnet-registry.md` costed a ~10-anchor fleet; `anchors.json` lists 19, so the daily
+  and monthly spend and the 250 XLM runway are restated (about 4 to 8 months).
+- `.env.example` documents the Vault signer variables. `Sep6Adapter.requestQuote` no longer
+  points at the closed #196 as pending: it says there is no indicative-price path, which is
+  what the firm-quote-only adapter actually does. The `sep6` no-quote-server message changed
+  accordingly.
+
 ### Added — every library package builds to `dist/` with type declarations ([#262](https://github.com/ezedike-evan/corridor-in-a-box/issues/262))
 
 - Each `@corridor/*` package has a `tsup.config.ts` and a `build` script emitting ESM plus
